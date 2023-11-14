@@ -1,24 +1,21 @@
 #!/bin/bash
 
+YEAR_START=$1
+YEAR_END=$2
+SUBJECT=$3
+STORAGE_PATH=$4
 
-FILES=$(find ./labfiles/ -name "TEST-[0-9]")
-GR_YEARS=$(grep -oh "[0-9][0-9][0-9][0-9]" $FILES | sort -u)
 
+FILES=$(find $STORAGE_PATH/$SUBJECT -name "TEST-[0-9]")
 
-for file in $FILES
+for ((gr_year=$YEAR_START; gr_year<=$YEAR_END; gr_year++))
 do
-	awk -F"/" '{print $3 " " $5}' <<< "$file"
-	for gr_year in $GR_YEARS
-	do
-		for ans_num in {25..0}
-		do
-			MAX_STUDENTS=($(grep "[a-zA-Z];$gr_year;$ans_num" $file | awk -F";" '{print $2}'))
-			if [ ${#MAX_STUDENTS[@]} -ne 0 ]
-			then
-				echo "In $gr_year students with maximum result ($ans_num correct answers):"
-				echo ${MAX_STUDENTS[@]}
-				break
-			fi
-		done
-	done
+	MAX_ANS=$(grep "[a-zA-Z];$gr_year;" $FILES | awk -F";" '{print $4}' | sort -n | tail -n 1)
+	if [ ${#MAX_ANS} -ne 0 ]
+	then
+		echo "In $gr_year students with maximum result ($MAX_ANS correct answers):"
+		echo $(grep "[a-zA-Z];$gr_year;$MAX_ANS" $FILES | awk -F";" '{print $2}')
+	else
+		echo "No tests in $gr_year"
+	fi
 done

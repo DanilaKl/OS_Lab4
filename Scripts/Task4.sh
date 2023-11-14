@@ -1,27 +1,34 @@
 #!/bin/bash
 
 GROUP_NUMBER=$1
+STORAGE_PATH=$2
 
-FILES=$(find ./labfiles/ -name "$GROUP_NUMBER-attendance")
-MIN_ATTENDANCE=0
+FILES=$(find $STORAGE_PATH -name "$GROUP_NUMBER-attendance")
 MIN_LESSONS=()
 
 for  file in $FILES
 do
-	awk -F"/" '{print $3}' <<< "$file"
+	awk -F"/" '{print $(NF-1)}' <<< "$file"
 	LESSONS_STR=$(tail -n 1 $file | grep -o "[0-1]*")
+	MAX_ABSENCE=0
 	for (( i=0; i<${#LESSONS_STR}; i++))
 	do
-		ATTENDANCE=$(sed  "s/[a-zA-Z]* [0-1]\{$i\}\([0-1]\)[0-1]*/\1/g" $file | grep -c "0")
-		if [ $ATTENDANCE -gt $MIN_ATTENDANCE ] 
+		ABSENCE=$(sed  "s/[a-zA-Z]* [0-1]\{$i\}\([0-1]\)[0-1]*/\1/g" $file | grep -c "0")
+		if [ $ABSENCE -gt $MAX_ABSENCE ] 
 		then
-			MIN_ATTENDANCE=$ATTENDANCE
+			MAX_ABSENCE=$ABSENCE
 			MIN_LESSONS=($((i+1)))
-		elif [ $ATTENDANCE -eq $MIN_ATTENDANCE ]
+		elif [ $ABSENCE -eq $MAX_ABSENCE ]
 		then
 			MIN_LESSONS+=($((i+1)))
 		fi
 	done
-	echo "Lessons with minimum attendance ($MIN_ATTENDANCE  missing):"
-	echo "${MIN_LESSONS[@]}"
+	
+	if [ $MAX_ABSENCE -lt ${#LESSONS_STR} ]
+	then
+		echo "Lessons with minimum attendance ($MAX_ABSENCE  missing):"
+		echo "${MIN_LESSONS[@]}"
+	else
+		echo "All lessons were attended by all students"
+	fi 
 done

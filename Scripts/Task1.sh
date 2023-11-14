@@ -1,16 +1,16 @@
 #!/bin/bash
 
 GROUP_NUMBER=$1
+STORAGE_PATH=$2
 
-STUDENTS=$( cat labfiles/students/groups/$GROUP_NUMBER)
-FILES=$(find ./labfiles/ -name "$GROUP_NUMBER-attendance")
+STUDENTS=$( cat $STORAGE_PATH/students/groups/$GROUP_NUMBER)
+FILES=($(find $STORAGE_PATH -name "$GROUP_NUMBER-attendance"))
 MAX_ATTENDANCE=0
 MAX_STUDENTS=()
 
 for student in $STUDENTS
 do
-	ATTENDANCE=$(grep $student $FILES | grep -o "1" | grep -c "1")
-# 	echo "$student: $ATTENDANCE"
+	ATTENDANCE=$(grep "$student " $FILES | grep -o "1" | grep -c "1")
 	if [ $ATTENDANCE -gt $MAX_ATTENDANCE ] 
 	then
 		MAX_ATTENDANCE=$ATTENDANCE
@@ -21,5 +21,11 @@ do
 	fi
 done
 
-echo "Students with maximum attendance ($MAX_ATTENDANCE  studies):"
-echo "${MAX_STUDENTS[@]}"
+if [ ${#MAX_STUDENTS} -lt ${#STUDENTS} ]
+then
+	echo "Students with maximum attendance ($MAX_ATTENDANCE  studies):"
+	echo "${MAX_STUDENTS[@]}"
+else
+	echo "All students have maximum attendance ($MAX_ATTENDANCE  studies):"
+	echo "${MAX_STUDENTS[@]}"
+fi

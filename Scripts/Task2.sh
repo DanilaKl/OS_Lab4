@@ -1,9 +1,10 @@
 #!/bin/bash
 
 GROUP_NUMBER=$1
+STORAGE_PATH=$2
 
-STUDENTS=$( cat labfiles/students/groups/$GROUP_NUMBER)
-FILES=$(find ./labfiles/ -name "TEST-[0-9]")
+STUDENTS=$( cat $STORAGE_PATH/students/groups/$GROUP_NUMBER)
+FILES=$(find $STORAGE_PATH/ -name "TEST-[0-9]")
 
 MAX_GRADES=(0 0 0)
 MAX_STUDENTS=('' '' '')
@@ -11,7 +12,6 @@ COUNT_GRADES=(0 0 0)
 
 for student in $STUDENTS
 do
-	# echo $student
 	GRADES=$(grep -h "^$GROUP_NUMBER;$student" $FILES | awk -F";" '{print $5 "\n"}')
 	for grade in {3..5}
 	do
@@ -26,10 +26,14 @@ do
 			MAX_STUDENTS[IND]+=" $student"
 		fi
 	done
-	# echo "${COUNT_GRADES[@]}"
 done
 
 for grade in {3..5}
 do
-	echo "Students with maximum $grade (${MAX_GRADES[$grade-3]} grades): ${MAX_STUDENTS[$grade-3]}"
+	if [ ${MAX_GRADES[$grade-3]} -gt 0 ]
+	then
+		echo "Students with maximum $grade (${MAX_GRADES[$grade-3]} grades): ${MAX_STUDENTS[$grade-3]}"
+	else
+		echo "No students with $grade"
+	fi
 done
