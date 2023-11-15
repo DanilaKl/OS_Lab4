@@ -32,7 +32,13 @@ class TestTask2(unittest.TestCase):
                           "Students with maximum 3 (1 grades): Test\n" +
                           "Students with maximum 4 (1 grades): Test\n" +
                           "Students with maximum 5 (1 grades): Test\n")
-
+    def test_large_input(self):
+        result = subprocess.run(["../Scripts/Task2.sh test_group_large ."], shell=True, stdout=subprocess.PIPE,
+                                text=True)
+        self.assertEqual(result.stdout,
+                          "Students with maximum 3 (24 grades): Susan\n" +
+                          "Students with maximum 4 (25 grades): Don\n" +
+                          "Students with maximum 5 (24 grades): Ann\n")
 
 if __name__ == '__main__':
     unittest.main()

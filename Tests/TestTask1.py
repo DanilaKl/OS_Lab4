@@ -24,5 +24,12 @@ class TestTask1(unittest.TestCase):
                                 text=True)
         self.assertEqual(result.stdout, "Students with maximum attendance (4  studies):\nTest TestA\n")
 
+    def test_large_input(self):
+        result = subprocess.run(["../Scripts/Task1.sh test_group_large ."], shell=True, stdout=subprocess.PIPE,
+                                text=True)
+        self.assertEqual(result.stdout, "Students with maximum attendance (15  studies):\nAmber Alice Gerard\n")
+
+
+
 if __name__ == '__main__':
     unittest.main()

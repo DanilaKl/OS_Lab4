@@ -24,9 +24,17 @@ class TestTask4(unittest.TestCase):
         result = subprocess.run(["../Scripts/Task4.sh TEST ."], shell=True, stdout=subprocess.PIPE,
                                 text=True)
         self.assertEqual(result.stdout,
-                         ".\n"+
+                         ".\n" +
                          "Lessons with minimum attendance (2  missing):\n" +
                          "4\n")
+
+    def test_large_input(self):
+        result = subprocess.run(["../Scripts/Task4.sh test_group_large ."], shell=True, stdout=subprocess.PIPE,
+                                text=True)
+        self.assertEqual(result.stdout,
+                         ".\n" +
+                         "Lessons with minimum attendance (292  missing)::\n" +
+                         "5\n")
 
 
 if __name__ == '__main__':
