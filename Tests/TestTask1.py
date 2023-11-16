@@ -29,6 +29,10 @@ class TestTask1(unittest.TestCase):
                                 text=True)
         self.assertEqual(result.stdout, "Students with maximum attendance (15  studies):\nAmber Alice Gerard\n")
 
+    def test_wrong_amount_of_arguments(self):
+        result = subprocess.run(["../Scripts/Task1.sh one two three four ."], shell=True, stdout=subprocess.PIPE,
+                                text=True)
+        self.assertEqual(result.stdout, "Wrong number of arguments\n")
 
 
 if __name__ == '__main__':

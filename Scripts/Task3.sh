@@ -13,7 +13,7 @@ else
 	if [ ${#CHECK} -eq 0 ]
 	then
 		echo "Wrong subject number"
-	elif [ \( $YEAR_START -lt 0 \) -a \( $YEAR_START -gt $YEAR_END \)]
+	elif [ \( $YEAR_START -lt 0 \) ] || [ \( $YEAR_END -lt 0 \) ]
 	then
 		echo "Year can't be negative"
 	elif [ $YEAR_START -gt $YEAR_END ]

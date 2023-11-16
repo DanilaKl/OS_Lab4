@@ -3,13 +3,12 @@
 GROUP_NUMBER=$1
 STORAGE_PATH=$2
 
-find $STORAGE_PATH/students/groups/$GROUP_NUMBER
 if [ $# -ne 2 ] 
 then
 	echo "Wrong number of arguments"
 else
 	CHECK=$(find $STORAGE_PATH/students/groups -name "$GROUP_NUMBER")
-	
+
 	if [ ${#CHECK} -eq 0 ]
 	then
 		echo "Wrong group number"
